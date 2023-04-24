@@ -1,0 +1,79 @@
+plugins {
+    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
+}
+
+android {
+    namespace 'com.angcyo.finclipdemo'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.angcyo.finclipdemo"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "APP_KEY", "\"nUmu7s4i5YAgXqT5EORDLly8MZmUe9EkfbXR5QMsatugA4x+JWh7hhNS5aO52BFs\""
+        // App Secret
+        buildConfigField "String", "APP_SECRET", "\"7d067a5304a0c4fc\""
+        // API服务地址
+        buildConfigField "String", "API_URL", "\"https://api.finclip.com\""
+        // API服务前缀
+        buildConfigField "String", "API_PREFIX", "\"/api/v1/mop/\""
+
+        ndk {
+            abiFilters "x86", "armeabi", 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    packagingOptions {
+        // libsdkcore.so、libfin-yuvutil.so是被加固过的，不能被压缩，否则加载动态库时会报错
+        doNotStrip "*/x86/libsdkcore.so"
+        doNotStrip "*/x86_64/libsdkcore.so"
+        doNotStrip "*/armeabi/libsdkcore.so"
+        doNotStrip "*/armeabi-v7a/libsdkcore.so"
+        doNotStrip "*/arm64-v8a/libsdkcore.so"
+
+        doNotStrip "*/x86/libfin-yuvutil.so"
+        doNotStrip "*/x86_64/libfin-yuvutil.so"
+        doNotStrip "*/armeabi/libfin-yuvutil.so"
+        doNotStrip "*/armeabi-v7a/libfin-yuvutil.so"
+        doNotStrip "*/arm64-v8a/libfin-yuvutil.so"
+    }
+
+}
+
+dependencies {
+
+    implementation libs.core.ktx
+    implementation libs.appcompat
+    implementation libs.material
+    implementation libs.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.espresso.core
+
+    //https://www.finclip.com/downloads/
+    implementation 'com.finogeeks.lib:finapplet:2.40.3'
+}
